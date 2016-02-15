@@ -2,7 +2,11 @@
 
 use strict;
 use Curses::UI;
+use Curses::UI::Common;
+use Data::Dumper;
+
 my $cui = new Curses::UI( -color_support => 1 );
+my $dump;
 
 my @menu = (
   { -label => 'File', 
@@ -14,14 +18,20 @@ my @menu = (
 
 sub exit_dialog()
 {
-	my $return = $cui->dialog(
-		-message   => "Do you really want to quit?",
-		-title     => "Are you sure???", 
-		-buttons   => ['yes', 'no'],
+    my $return = $cui->dialog(
+	    -message   => "Do you really want to quit?",
+	    -title     => "Are you sure???", 
+	    -buttons   => ['yes', 'no'],
 
-	);
+    );
 
-exit(0) if $return;
+    if ($return)
+    {
+	open(my $fh, ">log");
+	print $fh $dump;
+	close($fh);
+	exit(0);
+    }
 }
 
 my $menu = $cui->add(
@@ -41,8 +51,16 @@ my $texteditor = $win1->add("text", "TextEditor",
 			 -text => "Here is some text\n"
 				. "And some more");
 
-$cui->set_binding(sub {$menu->focus()}, "\cX");
-$cui->set_binding( \&exit_dialog , "\cQ");
+#$cui->set_binding(sub {$menu->focus()}, "\cX");
+$cui->set_binding(sub {$menu->focus() }, CUI_ESCAPE );
+$cui->set_binding(sub {$texteditor->focus(); }, "\cI");
+
+## PATTERN binding key to another character
+$texteditor->set_binding(sub {$texteditor->add_string("i")}, "p");
+$dump = Dumper($texteditor);
+
+$cui->set_binding( \&exit_dialog , "\cX");
 
 $texteditor->focus();
 $cui->mainloop();
+
