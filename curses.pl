@@ -53,7 +53,7 @@ my $texteditor = $win1->add("text", "TextEditor",
 
 #$cui->set_binding(sub {$menu->focus()}, "\cX");
 $cui->set_binding(sub {$menu->focus() }, CUI_ESCAPE );
-$cui->set_binding(sub {$texteditor->focus(); }, "\cI");
+$menu->set_binding(sub {$texteditor->focus(); }, "i");
 
 ## PATTERN binding key to another character
 $texteditor->set_binding(sub {$texteditor->add_string("i")}, "p");
@@ -61,6 +61,6 @@ $dump = Dumper($texteditor);
 
 $cui->set_binding( \&exit_dialog , "\cX");
 
-$texteditor->focus();
+#$texteditor->focus();
 $cui->mainloop();
 
