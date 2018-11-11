@@ -29,6 +29,8 @@ sub setEditorWidget{
     my $statusBar = shift;
     my $statusEntry = shift;
 
+    no warnings;
+
     sub cusCursorLeft { ${$textEditor}->cursor_left(); }
     sub cusCursorRight { ${$textEditor}->cursor_right(); }
     sub cusCursorUp { ${$textEditor}->cursor_up(); }
@@ -81,6 +83,8 @@ sub setEditorWidget{
         ${$textEditor}->focus();
         $gMode = "normal";
     }
+
+    use  warnings;
 }
 
 
